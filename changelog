@@ -14,7 +14,7 @@ rsensors
 0.2.8 added more info in Spanish, doc, help in binary
 	changed bin help, command test instead tarea
 0.2.82	test, adding crontab time customization, upload to git, rubygems	 
-0.2.9 in course:
+0.2.9 in course: 
       test all modules, CI tools
       bin with easier param section, no order
 
