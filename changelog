@@ -1,0 +1,20 @@
+rsensors 
+0.1.2 init 29-11-17
+0.1.3 added multi core read
+0.1.4 improved presentation
+0.1.5 improved code
+0.1.6 added tests
+0.2.1 added hdd read
+0.2.2 improved format
+0.2.3 tested hdparm
+0.2.4 doc added, this file
+0.2.5 checked crontab fixed fail gem files, installing over bash -l - command
+0.2.6 fixed bin, adding warning if hdd temp
+0.2.7 added params to change critical temperatures
+0.2.8 added more info in Spanish, doc, help in binary
+	changed bin help, command test instead tarea
+0.2.82	test, adding crontab time customization, upload to git, rubygems	 
+0.2.9 in course:
+      test all modules, CI tools
+      bin with easier param section, no order
+

@@ -1,0 +1,68 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+require 'rsensors'
+
+args = ARGV.dup
+max_cpu = args[1].nil? ? 76 : args[1].to_f
+max_hd  = args[2].nil? ? 44 : args[2].to_f # get values
+cron_value = args[3].nil? ? "22,44 * * * *" : args[3].to_s
+
+case args[0]
+when 'schedule', 'programar' # not use ||
+  Rsensors::Cronify.schedule(max_cpu, max_hd, cron_value)
+when 'job' , 'test'
+  Rsensors::Notification.notify if (Rsensors::Sensor.temperature > max_cpu) || (Rsensors::Sensor.maxTemperatureHd > max_hd)
+when 'help' ,'ayuda'
+   if  (/es_.*/.match(ENV["LANG"])) # detecta español en consola
+    puts <<EOS
+Rsensors versión 0.2.8 - Software LGPL-3.0
+Usar con cuidado, probado pero sin ninguna garantía 
+Una gema Ruby para mostrar las temperaturas del sistema: CPU(s) y disco(s) duro(s)
+https://github.com/jacob-mf/rsensors 
+
+Uso:
+  rsensors [comando] [parámetro(s)]
+
+Por defecto, sin ningún comando se muestra notificación con las temperaturas medidas actuales
+Los parámetros [CPU] y [disco duro] representan las temperaturas límite a comparar, para CPUs y discos duros. Se introducen como números naturales en escala de grados Celsius
+Si no se indican límites, se toman por defecto, 76 grados Celsius para CPUs y 44°C para discos duros
+
+El párametro [cron] especifica la cadena de configuración de fecha y tiempo para la aplicación crontab, que especifica la frecuencia en la que se chequean las temperaturas
+Por defecto está establecido para lanzarse en minutos 22 y 44 de cada hora
+Para más información y opciones de la cadena se puede consultar:
+https://blog.desdelinux.net/cron-crontab-explicados/
+https://linux.die.net/man/5/crontab (en inglés)
+   
+Comandos posibles:
+  programar [CPU] [disco duro] [cron]	- programa la notificación de altas temperaturas cuando se supera algún límite establecido
+
+  test [CPU] [disco duro]		- lanza la notificación de altas temperaturas cuando se supera algún límite establecido
+
+  ayuda		                        - muestra éste mismo texto de ayuda. Para más información consultar en la web del proyecto
+  
+EOS
+   else
+    puts <<EOS
+
+Rsensors 0.2.8 version - LGPL-3.0 software
+Tested but no warranty, take care
+A Ruby gem to help on ESMS games
+More info about ESMS = Electronic Soccer Management Simulator 
+https://github.com/eliben/esms
+
+Usage:
+  esms_tools [command] [parameter(s)]
+
+Possible commands are:
+  ageCheck [file] [number]      - test age limit condition on the line-up file
+  ageCheck273 [file] [number]   - same as above for the ESMS 2.73 version 
+  eosEffect [file]              - apply end of season changes on the roster file
+
+EOS
+   end
+
+else
+ #puts "Nothing detected"
+  Rsensors::Notification.notify
+end
