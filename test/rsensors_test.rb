@@ -31,7 +31,13 @@ describe Rsensors do
     assert Float(Rsensors::Sensor.maxTemperatureHd)
   end
   
-  it 'The notification should end with no problems' do
+  it 'The notification should end with no problems' do # rake not working here
     assert   0, Rsensors::Notification.notify
   end  
+  it 'Cronify schedule will exit ok after add crontab task' do
+    assert 0, Rsensors::Cronify.schedule
+  end
+  it 'Cronify reset will end ok when completing crontab reset' do
+    assert 0, Rsensors::Cronify.reset
+  end
 end

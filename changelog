@@ -1,4 +1,4 @@
-rsensors 
+rsensors app - sorry for typwriting and other bigger errors -
 0.1.2 init 29-11-17
 0.1.3 added multi core read
 0.1.4 improved presentation
@@ -13,8 +13,15 @@ rsensors
 0.2.7 added params to change critical temperatures
 0.2.8 added more info in Spanish, doc, help in binary
 	changed bin help, command test instead tarea
-0.2.82	test, adding crontab time customization, upload to git, rubygems	 
-0.2.9 in course: 
+0.2.82	test, adding crontab time customization, upload to git, rubygems
+	 
+0.2.9 
+    1 fix important errors when refactoring  through code climate tips
+    2 fix temps detection in mint, no device subdir
+    3 fix understand urgent    
+    4 stable
+      in course: check code climate problems -> problems in devuan
+      check help files -> ffi requires Ruby version >= 2.0.
+      add LICENCIA file, create Spanish one
       test all modules, CI tools
       bin with easier param section, no order
-
