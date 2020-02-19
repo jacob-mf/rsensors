@@ -88,10 +88,10 @@ module Rsensors
      return temp.to_f
     end
     def self.hdparmInfoOk(line)
-      /^ drive temperature \(celsius\) is:\s+(d+)/.match(line)
+      /^ drive temperature \(celsius\) is:\s+(d+)/.match(line) # info detected
     end
     def self.hdparmProblem(line)
-      /^SG_IO: bad\/missing sense data/.match(line)
+      /^SG_IO: bad\/missing sense data/.match(line) # sense problem detected
     end
     def self.formatHdparm(entry)
 	 sol = []
@@ -99,9 +99,9 @@ module Rsensors
 	 entry.each_line { |line|
      if /^\/dev/.match(line)  # hard disk detected
       ok_sense = true # activate sense
-     elsif m1= hdParmInfoOk(line) # m1 = /^ drive temperature \(celsius\) is:\s+(d+)/.match(line) # info detected
+     elsif m1= hdParmInfoOk(line) # info detected
        sol << m1[1] if ok_sense
-     elsif hdparmProblem(line) #/^SG_IO: bad\/missing sense data/.match(line) # sense problem detected
+     elsif hdparmProblem(line) # sense problem detected
        ok_sense = false
      end
      }
@@ -150,14 +150,11 @@ module Rsensors
 	end
 
     def self.notify (max_temp_cpu = 77, max_temp_hd = 46) # optional max_temperature CPU hard disk values
-      #temp = Sensor.temperature1
-      #temp2 = Sensor.temperature2
-      #temp4 = Sensor.temperature4
       #temp_hd = Sensor.temperature_hd # change to multiple assignation
       temp,temp2, temp4, temp_hd = Sensor.temperature1, Sensor.temperature2, Sensor.temperature4, Sensor.temperature_hd
       # p Sensor.maxTemperatureHd
       n= create_notification()
-      n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal
+      n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal # temp_hd[1] store number
       if temp2 && temp4
        n.body = "Your computer's temperature is now:\n Core 2 #{temp2} °C, Core 4: #{temp4} °C\n Average temperature: #{(temp4+temp2)/2} °C\n" + temp_hd
      #  n = Libnotify.new(
@@ -171,7 +168,7 @@ module Rsensors
        #n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal
       elsif temp
         n.body = "Your computer's temperature is now: #{temp} °C\n" + temp_hd
-=begin       /* n = Libnotify.new(
+=begin       /* n = Libnotify.new( # note the different comment add form
         summary: 'Temperature',
         body: sentence ,
         timeout: 2.5,
@@ -181,13 +178,6 @@ module Rsensors
        #n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal
       else
          n.body = "Your computer's temperature is currently unknown by this app, sorry. Wait for a brilliant update. Peace\n" + temp_hd
-=begin         /* n = Libnotify.new(
-        summary: 'Temperature',
-        body: sentence ,
-        timeout: 2.5,
-        append: true
-=end       ) */ # note the different comment add form
-       #n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal # temp_hd[1] store number
       end
       puts n.body #sentence # check exit, now nothing on console
       puts "URGENT!" if n.urgency == :critical
