@@ -23,8 +23,8 @@ $ rsensors schedule # añade tarea al ''crontab'' para avisar cuando las
 Probado en portátiles Fujitsu Lifebook E-750, Toshiba Tecra A-11 con:
  * **Ubuntu 14.04** - Cinnamon
  * **Guadalinex 9 rc2** - Cinnamon
- * **GParted 3.5.3 - 25-12-12 Lxde
- * **Mint 19.3 Tricia ** - Cinnamon
+ * **GParted 3.5.3** - 25-12-12 Lxde
+ * **Mint 19.3 Tricia** - Cinnamon, Fluxbox (sin notificación de sistema)
  * Así parece funcionar en Linux con versión de kernel >= 3 
  
 Por ahora consulta los siguientes archivos para las temperaturas:
@@ -35,7 +35,7 @@ Por ahora consulta los siguientes archivos para las temperaturas:
  * o /sys/class/hwmon0/temp4_input  -> Núcleo 4
  
 Dependencias:
- * [Ruby] version >= 2.0
+ * [Ruby] (https://www.ruby-lang.org/) versión >= 2.0
  * [libnotify](https://github.com/splattael/libnotify) - adaptadores Ruby 
    para ''libnotify''.
  * [hddtemp](https://linux.die.net/man/8/hddtemp) - Hddtemp es la primera

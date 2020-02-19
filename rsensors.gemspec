@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rsensors'
-  s.version = '0.2.942'
+  s.version = '0.2.944'
   s.date = '2020-02-19' # 1st '2017-01-21'
   s.summary = 'A gem to display system hardware temperatures | Gema para mostrar la termperatura del sistema: microprocesador(es) y disco(s) duro(s)'
   s.description = 'Show a notification of your computer\'s temperature. It can be programmed as a cronjob, so you can be notified when the temperature is high | Muestra la temperaturas del sistema, puede igual actuar en segundo plano para alertar de altas temperaturas'

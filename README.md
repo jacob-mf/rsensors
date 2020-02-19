@@ -20,9 +20,9 @@ $ rsensors schedule # it will add a crontab task that will be active when the
 Tested on Fujitsu Lifebook E-750, Toshiba Tecra A-11 laptops with:
  * **Ubuntu 14.04** - Cinnamon
  * **Guadalinex 9 rc2** - Cinnamon
- * **Mint 19.3 Tricia ** - Cinnamon
- * **GParted 3.5.3 - 25-12-12 Lxde
- * So it looks like is working good on Linux kernela above version 3
+ * **Mint 19.3 Tricia** - Cinnamon, Fluxbox (no system notification)
+ * **GParted 3.5.3** - 25-12-12 - Lxde
+ * So it looks like is working good on Linux kernel above version 3
  
 By now check following files for CPU & cores temperatures:
  * /sys/class/hwmon/hwmon0/temp1_input -> CPU
@@ -30,7 +30,7 @@ By now check following files for CPU & cores temperatures:
  * /sys/class/hwmon/hwmon0/device/temp4_input OR  /sys/class/hwmon0/temp2_input -> Core 4
  
 Uses (required):
- * [Ruby] version >= 2.0
+ * [Ruby] (https://www.ruby-lang.org/) version >= 2.0
  * [libnotify](https://github.com/splattael/libnotify) - Ruby bindings
    for libnotify.
  * [hddtemp](https://linux.die.net/man/8/hddtemp) - Hddtemp as first

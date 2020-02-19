@@ -93,11 +93,14 @@ module Rsensors
     def self.hdparmProblem(line)
       /^SG_IO: bad\/missing sense data/.match(line) # sense problem detected
     end
+    def self.hdDetect(line)
+      return /^\/dev/.match(line)  # hard disk detected 
+    end
     def self.formatHdparm(entry)
 	 sol = []
 	 ok_sense = true
 	 entry.each_line { |line|
-     if /^\/dev/.match(line)  # hard disk detected
+     if hdDetect(line)
       ok_sense = true # activate sense
      elsif m1= hdParmInfoOk(line) # info detected
        sol << m1[1] if ok_sense
@@ -148,36 +151,30 @@ module Rsensors
         append: true
        )
 	end
-
+	def self.text4cores(t2, t4, t_hd)
+	  return "Your computer's temperature is now:\n Core 2 #{t2} °C, Core 4: #{t4} °C\n Average temperature: #{(t4+t2)/2} °C\n" + t_hd
+	end
+	def self.text1cpu(t, t_hd)
+	  return "Your computer's temperature is now: #{t} °C\n" + t_hd
+	end
+	def self.textHdOnly(t_hd)
+	  return "Your computer's temperature is currently unknown by this app, sorry. Wait for a brilliant update. Peace\n" + temp_hd
+	end
     def self.notify (max_temp_cpu = 77, max_temp_hd = 46) # optional max_temperature CPU hard disk values
-      #temp_hd = Sensor.temperature_hd # change to multiple assignation
-      temp,temp2, temp4, temp_hd = Sensor.temperature1, Sensor.temperature2, Sensor.temperature4, Sensor.temperature_hd
-      # p Sensor.maxTemperatureHd
+      # change to multiple assignation
+      temp,temp2 = Sensor.temperature1, Sensor.temperature2
+      temp4, temp_hd = Sensor.temperature4, Sensor.temperature_hd
       n= create_notification()
       n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal # temp_hd[1] store number
       if temp2 && temp4
-       n.body = "Your computer's temperature is now:\n Core 2 #{temp2} °C, Core 4: #{temp4} °C\n Average temperature: #{(temp4+temp2)/2} °C\n" + temp_hd
-     #  n = Libnotify.new(
-     #   summary: 'Temperature',
-     #   body: sentence ,
-     #   timeout: 2.5,
-      #  append: true
-      # )
+       n.body = text4cores(temp2, temp4, temp_hd) #code climate refactor
        n.urgency = temp2 > max_temp_cpu ? :critical : :normal
        n.urgency = temp4 > max_temp_cpu ? :critical : :normal
-       #n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal
       elsif temp
-        n.body = "Your computer's temperature is now: #{temp} °C\n" + temp_hd
-=begin       /* n = Libnotify.new( # note the different comment add form
-        summary: 'Temperature',
-        body: sentence ,
-        timeout: 2.5,
-        append: true
-=end       ) */
-       n.urgency = temp > max_temp ? :critical : :normal
-       #n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal
+        n.body = text1cpu(temp, temp_hd)
+        n.urgency = temp > max_temp ? :critical : :normal
       else
-         n.body = "Your computer's temperature is currently unknown by this app, sorry. Wait for a brilliant update. Peace\n" + temp_hd
+         n.body = textHdOnly(temp_hd) 
       end
       puts n.body #sentence # check exit, now nothing on console
       puts "URGENT!" if n.urgency == :critical
