@@ -100,19 +100,23 @@ module Rsensors
      return sol[0].to_f if sol.size == 1
 	 return sol
     end
+    def self.hdparmLine(line, ol, ok_sense)
+      if hdDetect(line)
+          ok_sense = true # activate sense
+      elsif m1= hdParmInfoOk(line) # info detected
+          sol << m1[1] if ok_sense
+      elsif hdparmProblem(line) # sense problem detected
+          ok_sense = false
+      end
+      return sol, ok_sense
+    end
     def self.formatHdparm(entry)
 	  sol = []
 	  ok_sense = true
 	  entry.each_line { |line|
-      if hdDetect(line)
-       ok_sense = true # activate sense
-      elsif m1= hdParmInfoOk(line) # info detected
-       sol << m1[1] if ok_sense
-      elsif hdparmProblem(line) # sense problem detected
-       ok_sense = false
-      end
-     }
-	 hdParmOutput(sol)
+	    sol, ok_sense = hdparmLine(line,sol,ok_sense)
+              }
+	  hdParmOutput(sol)
 	end
     def self.formatHddtemp(entry)
 	 sol = []

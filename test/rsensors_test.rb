@@ -20,7 +20,9 @@ require 'minitest/pride'
 require 'minitest/autorun'
 require 'rsensors'
 
+
 describe Rsensors do
+  i_suck_and_my_tests_are_order_dependent!() # remember better test order independent
   it 'sensor should return a temperature number' do
     assert Float(Rsensors::Sensor.temperature)
   end
