@@ -11,7 +11,7 @@
 #Gem name 	Require statement 	Main class or module
 #rsensors 	require 'libnotify' 	Rsensors
 # more info Rsensors = Ruby Sensors https://github.com/jacob-mf/rsensors
-# @version 0.2.9 @date 17-2-2020  # 0.2.8  @date 15-3-2018
+# @version 0.2.945 @date 19-2-2020  # 0.2.8  @date 15-3-2018
 # @author Luis Jacob Mariscal Fernández
  # Currently works/tests only over Linux, on kernel above 3
 
@@ -58,7 +58,7 @@ module Rsensors
      end   #dtemp -n /dev/?d? ) # good for one line, one hard disk
      return temp
     end
-    def self.format_hdparm (text)
+    def self.format_hdparm(text)
      sol = ""
      text.each_line { |line|
       if /^\/dev/.match(line)  # hard disk detected
@@ -96,21 +96,24 @@ module Rsensors
     def self.hdDetect(line)
       return /^\/dev/.match(line)  # hard disk detected 
     end
-    def self.formatHdparm(entry)
-	 sol = []
-	 ok_sense = true
-	 entry.each_line { |line|
-     if hdDetect(line)
-      ok_sense = true # activate sense
-     elsif m1= hdParmInfoOk(line) # info detected
-       sol << m1[1] if ok_sense
-     elsif hdparmProblem(line) # sense problem detected
-       ok_sense = false
-     end
-     }
-	 return sol[0].to_f if sol.size == 1
+    def self.hdParmOutput(sol)
+     return sol[0].to_f if sol.size == 1
 	 return sol
     end
+    def self.formatHdparm(entry)
+	  sol = []
+	  ok_sense = true
+	  entry.each_line { |line|
+      if hdDetect(line)
+       ok_sense = true # activate sense
+      elsif m1= hdParmInfoOk(line) # info detected
+       sol << m1[1] if ok_sense
+      elsif hdparmProblem(line) # sense problem detected
+       ok_sense = false
+      end
+     }
+	 hdParmOutput(sol)
+	end
     def self.formatHddtemp(entry)
 	 sol = []
 	 entry.each_line { |line|
@@ -145,10 +148,9 @@ module Rsensors
   module Notification
 	def self.create_notification()
 	 return Libnotify.new(
-        summary: 'Temperature',
-    #    body: sentence ,
-        timeout: 2.5,
-        append: true
+       summary: 'Temperature',
+       timeout: 2.5,
+       append: true
        )
 	end
 	def self.text4cores(t2, t4, t_hd)
@@ -160,11 +162,18 @@ module Rsensors
 	def self.textHdOnly(t_hd)
 	  return "Your computer's temperature is currently unknown by this app, sorry. Wait for a brilliant update. Peace\n" + temp_hd
 	end
-    def self.notify (max_temp_cpu = 77, max_temp_hd = 46) # optional max_temperature CPU hard disk values
+	def self.notifyOutput(n)
+	  puts n.body #sentence # check exit, now nothing on console
+      puts "URGENT!" if n.urgency == :critical
+      puts "Normal temperatures" if n.urgency == :normal
+      n.show!
+    end
+    def self.notifyInit
+      return Sensor.temperature1, Sensor.temperature2, Sensor.temperature4, Sensor.temperature_hd, create_notification()
+    end
+    def self.notify(max_temp_cpu = 77, max_temp_hd = 46) # optional max_temperature CPU hard disk values
       # change to multiple assignation
-      temp,temp2 = Sensor.temperature1, Sensor.temperature2
-      temp4, temp_hd = Sensor.temperature4, Sensor.temperature_hd
-      n= create_notification()
+      temp, temp2, temp4, temp_hd, n = notifyInit
       n.urgency = Sensor.maxTemperatureHd > max_temp_hd ? :critical : :normal # temp_hd[1] store number
       if temp2 && temp4
        n.body = text4cores(temp2, temp4, temp_hd) #code climate refactor
@@ -176,10 +185,7 @@ module Rsensors
       else
          n.body = textHdOnly(temp_hd) 
       end
-      puts n.body #sentence # check exit, now nothing on console
-      puts "URGENT!" if n.urgency == :critical
-      puts "Normal temperatures" if n.urgency == :normal
-      n.show!
+	  notifyOutput(n)
       exit (0)
     end
   end
@@ -216,14 +222,14 @@ module Rsensors
     end
 
     def self.reset
-		if system("crontab -r")
-			puts 'INFO: Erase rsensors on the crontab file'
-			file.unlink
-			exit(0)
-		else
-			warn 'ERROR: Failed to delete rsensors on crontab'
-			file.unlink
-			exit(1)
+	  if system("crontab -r")
+		 puts 'INFO: Erase rsensors on the crontab file'
+		 file.unlink
+		 exit(0)
+	  else
+		 warn 'ERROR: Failed to delete rsensors on crontab'
+		 file.unlink
+		 exit(1)
       end
     end
   end

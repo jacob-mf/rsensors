@@ -35,7 +35,7 @@ Por ahora consulta los siguientes archivos para las temperaturas:
  * o /sys/class/hwmon0/temp4_input  -> Núcleo 4
  
 Dependencias:
- * [Ruby] (https://www.ruby-lang.org/) versión >= 2.0
+ * [Ruby](https://www.ruby-lang.org/es) versión >= 2.0
  * [libnotify](https://github.com/splattael/libnotify) - adaptadores Ruby 
    para ''libnotify''.
  * [hddtemp](https://linux.die.net/man/8/hddtemp) - Hddtemp es la primera

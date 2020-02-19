@@ -19,9 +19,10 @@ rsensors app - sorry for typwriting and other bigger errors -
     1 fix important errors when refactoring  through code climate tips
     2 fix temps detection in mint, no device subdir
     3 fix understand urgent    
+      check help files -> ffi requires Ruby version >= 2.0
     4 stable
       in course: check code climate problems -> problems in devuan
-      check help files -> ffi requires Ruby version >= 2.0.
+      rake test randomly, need to do last task the last one, in order
       add LICENCIA file, create Spanish one
       test all modules, CI tools
       bin with easier param section, no order

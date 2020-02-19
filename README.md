@@ -30,7 +30,7 @@ By now check following files for CPU & cores temperatures:
  * /sys/class/hwmon/hwmon0/device/temp4_input OR  /sys/class/hwmon0/temp2_input -> Core 4
  
 Uses (required):
- * [Ruby] (https://www.ruby-lang.org/) version >= 2.0
+ * [Ruby](https://www.ruby-lang.org) version >= 2.0
  * [libnotify](https://github.com/splattael/libnotify) - Ruby bindings
    for libnotify.
  * [hddtemp](https://linux.die.net/man/8/hddtemp) - Hddtemp as first
